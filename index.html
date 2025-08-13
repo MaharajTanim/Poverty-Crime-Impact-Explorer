@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Poverty & Crime Rate Simulator</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script
+      src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"
+      defer
+    ></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>Poverty & Crime Impact Explorer</h1>
+      <p class="tagline">
+        Interactive simulation of how poverty thresholds influence observed
+        crime rates
+      </p>
+    </header>
+
+    <main class="layout">
+      <section class="panel inputs" aria-labelledby="inputs-title">
+        <h2 id="inputs-title">Inputs</h2>
+        <div class="field-group">
+          <label for="csvFile"
+            >Upload CSV
+            <span
+              class="hint"
+              data-tooltip="Must include columns: 'income' and 'committed_crime'. Income numeric, committed_crime should be 0/1."
+              >?</span
+            ></label
+          >
+          <input type="file" id="csvFile" accept=".csv" />
+        </div>
+        <div class="field-group">
+          <label for="threshold"
+            >Poverty Threshold
+            <span
+              class="hint"
+              data-tooltip="Individuals with income strictly less than this value are classified as 'poor'."
+              >?</span
+            ></label
+          >
+          <input
+            type="number"
+            id="threshold"
+            placeholder="e.g. 20000"
+            inputmode="decimal"
+          />
+        </div>
+        <div class="field-group">
+          <label for="binSize"
+            >Income Bin Size
+            <span
+              class="hint"
+              data-tooltip="Width of each income bin for aggregation (e.g., 5000 groups incomes like 0-4999, 5000-9999, etc.)"
+              >?</span
+            ></label
+          >
+          <input
+            type="number"
+            id="binSize"
+            placeholder="e.g. 5000"
+            inputmode="decimal"
+            value="5000"
+          />
+        </div>
+        <div class="buttons-row">
+          <button id="runBtn" class="primary">Run Simulation</button>
+          <button id="resetBtn" class="ghost" type="button">Reset</button>
+        </div>
+        <div class="download-sample">
+          <button id="sampleBtn" type="button" class="link-btn">
+            Download Sample CSV
+          </button>
+        </div>
+        <div id="messages" role="alert" aria-live="polite"></div>
+      </section>
+
+      <section class="panel results" aria-labelledby="results-title">
+        <h2 id="results-title">Results</h2>
+        <div class="cards" id="resultCards" hidden>
+          <div class="card">
+            <h3>
+              Poverty Rate
+              <span
+                class="hint"
+                data-tooltip="Portion of individuals with income below the poverty threshold."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="povertyRate">-</p>
+          </div>
+          <div class="card">
+            <h3>
+              Overall Crime Rate
+              <span
+                class="hint"
+                data-tooltip="Total crimes divided by total individuals."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="overallCrimeRate">-</p>
+          </div>
+          <div class="card">
+            <h3>
+              Poor Crime Rate
+              <span
+                class="hint"
+                data-tooltip="Crimes among poor divided by number of poor individuals."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="poorCrimeRate">-</p>
+          </div>
+          <div class="card">
+            <h3>
+              Non-Poor Crime Rate
+              <span
+                class="hint"
+                data-tooltip="Crimes among non-poor divided by number of non-poor individuals."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="nonPoorCrimeRate">-</p>
+          </div>
+          <div class="card">
+            <h3>
+              KS Statistic
+              <span
+                class="hint"
+                data-tooltip="Kolmogorov–Smirnov statistic: maximum difference between empirical CDFs of crime indicators for poor vs non-poor."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="ksStat">-</p>
+          </div>
+          <div class="card">
+            <h3>
+              KS p-value
+              <span
+                class="hint"
+                data-tooltip="Probability of observing a KS statistic at least this large if both groups share the same distribution."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="ksPValue">-</p>
+          </div>
+          <div class="card conclusion">
+            <h3>
+              Conclusion
+              <span class="hint" data-tooltip="Interpretation at α = 0.05."
+                >?</span
+              >
+            </h3>
+            <p class="value" id="conclusion">-</p>
+          </div>
+        </div>
+        <div class="chart-wrapper" hidden>
+          <canvas
+            id="crimeChart"
+            aria-label="Crime rate by income bin"
+            role="img"
+          ></canvas>
+        </div>
+      </section>
+    </main>
+
+    <footer class="app-footer">
+      <p>
+        Client-side simulation. No data leaves your browser. Built for
+        exploratory analysis.
+      </p>
+    </footer>
+  </body>
+</html>
