@@ -55,6 +55,3 @@ Potential enhancements:
 - Support multi-category crime severity.
 - Add alternative tests (Chi-square for 2x2 table, logistic regression fit summary).
 
-## License
-
-MIT
